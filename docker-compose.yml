@@ -1,0 +1,72 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:5.7
+    restart: on-failure
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - "./docker/mysql/data:/var/lib/mysql"
+      - "./docker/mysql/config/custom.cnf:/etc/mysql/conf.d/custom.cnf"
+      - "./docker/mysql/config/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql"
+
+  composer:
+    build:
+      context: "."
+      dockerfile: "./docker/composer/Dockerfile"
+    restart: on-failure
+    command: start
+    volumes:
+      - "./docker/composer/logs:/logs"
+      - ".:/app"
+      - "/app/vendor"
+    ports:
+      - "8080:8080"
+    environment:
+      PDO_DNS: "mysql:dbname=spa;host=mysql;charset=utf8"
+      PDO_USERNAME: "root"
+      PDO_PASSWORD: ""
+
+  node:
+    image: node:8.11
+    command: npm i && npm run dev
+    volumes:
+      - ".:/usr/app/"
+      - "/usr/app/node_modules"
+
+  elasticsearch:
+    build:
+      context: "."
+      dockerfile: "./docker/elasticsearch/Dockerfile"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - "./docker/elasticsearch/data:/usr/share/elasticsearch/data"
+      - "./docker/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+      - "./docker/elasticsearch/config/logging.yml:/usr/share/elasticsearch/config/logging.yml"
+      # - "./elasticsearch/config/userdict_ja.txt:/usr/share/elasticsearch/config/userdict_ja.txt"
+      - "./docker/elasticsearch/logs:/var/log/elasticsearch"
+    environment:
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "bootstrap.memory_lock=true"
+      - "xpack.security.enabled=false"
+      - "xpack.graph.enabled=false"
+      - "xpack.ml.enabled=false"
+      - "xpack.monitoring.enabled=true"
+      - "xpack.watcher.enabled=false"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.1.4
+    ports:
+      - "5601:5601"
+    environment:
+      - "xpack.security.enabled=false"
+
+volumes:
+  mysql: {}
+  elasticsearch: {}

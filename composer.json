@@ -1,0 +1,11 @@
+{
+    "scripts": {
+        "start": "composer install  && composer runserver",
+        "runserver": "php -S 0.0.0.0:8080 -t src/main/php"
+    },
+    "autoload": {
+        "psr-4": {
+            "lmarqs\\Spa\\": "src/main/php"
+        }
+    }
+}
