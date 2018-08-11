@@ -10,6 +10,18 @@ class Request
     const METHOD_PUT = 'PUT';
     const METHOD_DELETE = 'DELETE';
 
+    private $atributes = [];
+
+    public function setAttribute($key, $value)
+    {
+        return $this->$atributes[$key] = $value;
+    }
+
+    public function getAttribute($key)
+    {
+        return $this->$atributes[$key];
+    }
+
     public function params()
     {
         return is_array($_POST) ? $_POST : [];
@@ -27,8 +39,6 @@ class Request
 
     public function method()
     {
-        // print_r($_REQUEST);
-        // print_r($_SERVER);
         return $_SERVER['REQUEST_METHOD'];
     }
 }

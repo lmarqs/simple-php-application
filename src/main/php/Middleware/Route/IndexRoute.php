@@ -1,6 +1,7 @@
 <?php
 namespace lmarqs\Spa\Middleware\Route;
 
+use lmarqs\Spa\Controller\IndexController;
 use lmarqs\Spa\Middleware\Handler;
 use lmarqs\Spa\Middleware\Route\Api\ApiRoute;
 
@@ -14,7 +15,7 @@ class IndexRoute extends Handler
         $this->add('login', new LoginRoute());
 
         $this->add('', function ($request, $response) {
-            $response->write('home')->send();
+            IndexController::processRequest($request, $response);
         });
     }
 }
