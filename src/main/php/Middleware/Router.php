@@ -7,51 +7,41 @@ use lmarqs\Spa\Core\Logger;
 class Router
 {
 
-    private $routes;
-
-    public function __construct($route)
-    {
-        $this->routes = $route->toArray();
-    }
-
-    public function run()
+    public function run($request, $response, $root, $basepath = '')
     {
 
-        $request = new Request();
-        $response = new Response();
+        foreach ($root->handlers as $handler) {
 
-        $path = $request->path();
-        $method = $request->method();
+            $path = $basepath . $handler['path'];
 
-        $route_match_found = false;
-
-        foreach ($this->routes as $expression => $route) {
-
-            Logger::getInstance()->i('ROUTER', $path);
-
-            if (preg_match('/^' . $expression . '/', $path, $matches)) {
-
-                $route_match_found = true;
-
-                if (!isset($route->handles[$method])) {
-                    // todo: use response
-                    header('HTTP/1.0 405 Method Not Allowed');
-                    Logger::getInstance()->i('ROUTER', 'HTTP/1.0 405 Method Not Allowed');
-                    break;
-                }
+            if (preg_match('/^' . str_replace('/', '\/', trim($path, '\/')) . '/', trim($request->path(), '\/'))) {
 
                 $continue = false;
-                $next = function ($error) {
-                    if (!$error) {
-                        $continue = true;
+
+                $next = function ($ex = '') use (&$continue) {
+                    if ($ex) {
+                        Logger::getInstance()->e('ROUTER', $ex->getMessage() . "\n" . $ex->getTraceAsString());
+                        return;
                     }
+
+                    $continue = true;
                 };
 
                 try {
-                    array_shift($matches); // Remove first element that contains the whole string
-                    call_user_func_array($route->handles[$method], [$request, $response, $matches, $next]);
-                } catch (Exception $e) {
-                    Logger::getInstance()->e('ROUTER', $e->getMessage());
+                    if ($handler['callable'] instanceof Handler) {
+
+                        $this->run($request, $response, $handler['callable'], $path . '/');
+
+                    } else {
+
+                        preg_match('/' . str_replace('/', '\/', $handler['path']) . '/', $request->path(), $matches);
+
+                        array_shift($matches); // Remove the first element that contains the whole string
+
+                        $handler['callable']($request, $response, $next, $matches);
+                    }
+                } catch (\Exception $ex) {
+                    $next($ex);
                 }
 
                 if (!$continue) {
@@ -59,11 +49,6 @@ class Router
                 }
             }
 
-        }
-
-        if (!$route_match_found) {
-            header('HTTP/1.0 404 Not Found');
-            Logger::getInstance()->i('ROUTER', 'HTTP/1.0 404 Not Found');
         }
 
     }
