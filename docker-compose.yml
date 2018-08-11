@@ -4,7 +4,7 @@ services:
     image: mysql:5.7
     restart: on-failure
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      - MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
       - "./docker/mysql/data:/var/lib/mysql"
       - "./docker/mysql/config/custom.cnf:/etc/mysql/conf.d/custom.cnf"
@@ -23,9 +23,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      PDO_DNS: "mysql:dbname=spa;host=mysql;charset=utf8"
-      PDO_USERNAME: "root"
-      PDO_PASSWORD: ""
+      - PDO_DNS: "mysql:dbname=spa;host=mysql;charset=utf8"
+      - PDO_USERNAME: "root"
+      - PDO_PASSWORD: ""
+      - AUTHENTICABLE_SECRET: "!s3cr3t[%s][%s]"
+      - ADMIN_USERNAME: "admin"
+      - ADMIN_PASSWORD: "admin"
 
   node:
     image: node:8.11
