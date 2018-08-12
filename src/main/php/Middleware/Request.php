@@ -11,6 +11,28 @@ class Request
     const METHOD_DELETE = 'DELETE';
 
     private $attributes = [];
+    private $classes = [];
+    private $errors = [];
+
+    public function setClass($key, $value)
+    {
+        return $this->classes[$key] = $value;
+    }
+
+    public function getClass($key)
+    {
+        return $this->classes[$key];
+    }
+
+    public function setError($key, $value)
+    {
+        return $this->errors[$key] = $value;
+    }
+
+    public function getError($key)
+    {
+        return $this->errors[$key];
+    }
 
     public function setAttribute($key, $value)
     {
@@ -22,12 +44,22 @@ class Request
         return $this->attributes[$key];
     }
 
-    public function getAttributes()
+    public function attributes()
     {
         return $this->attributes;
     }
 
-    public function params()
+    public function classes()
+    {
+        return $this->classes;
+    }
+
+    public function errors()
+    {
+        return $this->errors;
+    }
+
+    public function parameters()
     {
         return is_array($_POST) ? $_POST : [];
     }

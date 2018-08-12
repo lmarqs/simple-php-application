@@ -26,11 +26,11 @@ class IndexRoute extends Handler
     private function loggedInFilter()
     {
         return function ($request, $response, $next) {
-            if (session_status() == PHP_SESSION_ACTIVE && $_SESSION['logged_in'] == 'true') {
+            if (session_status()) {
                 $next();
                 return;
             }
-            $response->setHeader('Location', 'login')->send();
+            $response->setHeader('Location', '/login')->send();
         };
     }
 

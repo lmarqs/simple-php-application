@@ -11,7 +11,13 @@ abstract class Controller
 
     protected function render($view, $request, $response)
     {
-        $attributes = $request->getAttributes();
+        $BUNDLES_SERVER_ADDRESS = getenv('CONTROLLER_BUNDLES_SERVER_ADDRESS');
+
+        $attrs = $request->attributes();
+        $params = $request->parameters();
+        $query = $request->query();
+        $errors = $request->errors();
+        $classes = $request->classes();
 
         ob_start();
         include implode(DIRECTORY_SEPARATOR, [Controller::VIEW_PATH, "$view.tpl.php"]);

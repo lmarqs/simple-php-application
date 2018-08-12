@@ -1,8 +1,9 @@
 <?php
 namespace lmarqs\Spa\Model;
 
-interface Autenticable
+interface Authenticable
 {
     public function getUsername();
     public function getPassword();
+    public function comparePassword($password);
 }
