@@ -10,16 +10,21 @@ class Request
     const METHOD_PUT = 'PUT';
     const METHOD_DELETE = 'DELETE';
 
-    private $atributes = [];
+    private $attributes = [];
 
     public function setAttribute($key, $value)
     {
-        return $this->$atributes[$key] = $value;
+        return $this->attributes[$key] = $value;
     }
 
     public function getAttribute($key)
     {
-        return $this->$atributes[$key];
+        return $this->attributes[$key];
+    }
+
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 
     public function params()

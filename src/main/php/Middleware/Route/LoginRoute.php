@@ -1,6 +1,7 @@
 <?php
 namespace lmarqs\Spa\Middleware\Route;
 
+use lmarqs\Spa\Controller\LoginController;
 use lmarqs\Spa\Middleware\Handler;
 
 class LoginRoute extends Handler
@@ -9,7 +10,7 @@ class LoginRoute extends Handler
     {
 
         $this->add('', function ($request, $response, $next) {
-            $response->write('login route')->send();
+            LoginController::processRequest($request, $response);
         });
 
     }

@@ -20,9 +20,10 @@ class Response
         return $this;
     }
 
-    public function setHeader($header)
+    public function setHeader($key, $value)
     {
-        $this->headers[] = $header;
+        $this->headers[$key] = $value;
+        return $this;
     }
 
     public function send($code = 200)
@@ -30,13 +31,12 @@ class Response
         if ($this->sent) {
             throw new \Exception();
         }
-
         $this->sent = true;
 
-        header('HTTP/1.1 ' . $code, true, $code);
+        header("HTTP/1.1 $code", true, $code);
 
-        foreach ($this->headers as $header) {
-            header($header);
+        foreach ($this->headers as $key => $value) {
+            header("$key: $value");
         }
 
         echo $this->content;

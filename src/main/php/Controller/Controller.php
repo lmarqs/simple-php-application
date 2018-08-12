@@ -11,6 +11,8 @@ abstract class Controller
 
     protected function render($view, $request, $response)
     {
+        $attributes = $request->getAttributes();
+
         ob_start();
         include implode(DIRECTORY_SEPARATOR, [Controller::VIEW_PATH, "$view.tpl.php"]);
         $content = ob_get_clean();
