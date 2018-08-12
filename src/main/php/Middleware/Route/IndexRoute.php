@@ -11,6 +11,7 @@ class IndexRoute extends Handler
     {
 
         $this->add('login', new LoginRoute());
+        $this->add('logout', new LogoutRoute());
 
         $this->add('', $this->loggedInFilter());
 
@@ -26,7 +27,8 @@ class IndexRoute extends Handler
     private function loggedInFilter()
     {
         return function ($request, $response, $next) {
-            if (session_status()) {
+            session_start();
+            if (isset($_SESSION["username"])) {
                 $next();
                 return;
             }

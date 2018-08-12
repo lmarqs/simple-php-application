@@ -16,6 +16,7 @@ class LoginController extends Controller
 
             if ($admin->getUsername() == $params["username"] && $admin->comparePassword($params["password"])) {
                 session_start();
+                $_SESSION["username"] = $params["username"];
                 $response->setHeader("Location", "/")->send();
                 return;
             }
