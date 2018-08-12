@@ -33,9 +33,19 @@ module.exports = {
                 use: [
                     "style-loader",
                     "css-loader",
-                    "sass-loader"
+                    "resolve-url-loader",
+                    "sass-loader?sourceMap"
                 ],
                 exclude: /node_modules/
+            },
+            {
+                test: /\.(png|jpg|gif|svg)$/,
+                use: [{
+                    loader: "url-loader",
+                    options: {
+                        limit: 0
+                    }
+                }]
             }
         ]
     },
