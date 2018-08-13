@@ -11,27 +11,13 @@ class Request
     const METHOD_DELETE = 'DELETE';
 
     private $attributes = [];
-    private $classes = [];
     private $errors = [];
 
-    public function setClass($key, $value)
+    public function addErrors($errors)
     {
-        return $this->classes[$key] = $value;
-    }
-
-    public function getClass($key)
-    {
-        return $this->classes[$key];
-    }
-
-    public function setError($key, $value)
-    {
-        return $this->errors[$key] = $value;
-    }
-
-    public function getError($key)
-    {
-        return $this->errors[$key];
+        foreach ($errors as $key => $value) {
+            $this->$errors[$key] = $value;
+        }
     }
 
     public function setAttribute($key, $value)
@@ -41,17 +27,12 @@ class Request
 
     public function getAttribute($key)
     {
-        return $this->attributes[$key];
+        return isset($this->attributes[$key]) ? $this->attributes[$key] : null;
     }
 
     public function attributes()
     {
         return $this->attributes;
-    }
-
-    public function classes()
-    {
-        return $this->classes;
     }
 
     public function errors()
