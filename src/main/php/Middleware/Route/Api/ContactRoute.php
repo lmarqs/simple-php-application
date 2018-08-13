@@ -12,30 +12,34 @@ class ContactRoute extends Handler
 
         $this->add('', function ($request, $response, $next) {
             if ($request->method() != Request::METHOD_GET) {
-                $response->send(405);
+                $next();
                 return;
             }
 
-            $next();
-        });
-
-        $this->add('photo/([0-9]+)', function ($request, $response, $next, $matches) {
-            $response
-                ->write('api/contact/photo')
-                ->write($matches[0])
-                ->send();
-        });
-
-        $this->add('', function ($request, $response) {
-            if ($request->method() != Request::METHOD_GET) {
-                $response->send(405);
-                return;
-            }
+            $query = $request->query();
+            $q = isset($query["q"]) ? $query["q"] : "";
 
             $service = new ContactService();
 
-            $response->write(json_encode($service->find()))->send();
+            $hits = $service->find($q);
+
+            $response->write(json_encode($hits))->send();
+
         });
 
+        $this->add('([0-9]+)', function ($request, $response, $next, $matches) {
+            if ($request->method() != Request::METHOD_DELETE) {
+                $next();
+                return;
+            }
+            print_r($matches);
+            ContactService::delete($matches[0]);
+            $response->send();
+
+        });
+
+        $this->add('', function ($request, $response, $next) {
+            $response->send(400);
+        });
     }
 }
