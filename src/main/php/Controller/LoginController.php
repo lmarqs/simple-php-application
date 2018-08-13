@@ -22,6 +22,6 @@ class LoginController extends Controller
             }
         }
 
-        self::render('login/index', $request, $response);
+        self::render('login/form', $request, $response);
     }
 }
