@@ -31,6 +31,7 @@ class Indexer
 
     private static function getClient()
     {
+        sleep (1);
         if (!self::$client) {
             self::$client = ClientBuilder::create()
                 ->setHosts([getenv("ELASTICSEARCH_HOST")])
