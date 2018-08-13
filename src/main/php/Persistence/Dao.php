@@ -25,7 +25,7 @@ abstract class Dao
 
     public function fetch($id)
     {
-        $sql = "SELECT * FROM {$this->table()} WHERE id = :id";
+        $sql = sprintf('SELECT * FROM %s WHERE id = :id', $this->table());
 
         $sth = ConnectionFactory::connection()->prepare($sql);
         $sth->execute(['id' => $id]);
