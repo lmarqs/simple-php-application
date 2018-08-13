@@ -30,6 +30,14 @@ class Request
         return isset($this->attributes[$key]) ? $this->attributes[$key] : null;
     }
 
+    public function addAttributes($attributes)
+    {
+        print_r($attributes);
+        foreach ($attributes as $key => $value) {
+            $this->$attributes[$key] = $value;
+        }
+    }
+
     public function attributes()
     {
         return $this->attributes;
