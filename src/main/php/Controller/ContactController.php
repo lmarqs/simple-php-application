@@ -15,7 +15,10 @@ class ContactController extends Controller
             if ($request->method() == Request::METHOD_GET) {
                 if ($id) {
                     $service = new ContactService();
-                    $request->addAttributes($service->fetch($id));
+                    $model = $service->fetch($id);
+                    if ($model) {
+                        $request->addAttributes($model->toArray());
+                    }
                 }
 
                 self::render('contact/form', $request, $response);
