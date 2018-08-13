@@ -42,10 +42,10 @@ class ContactController extends Controller
 
         $service = new ContactService();
 
-        if ($id == '0') {
-            $service->insert($model);
-        } else {
+        if ($id) {
             $service->update($model);
+        } else {
+            $service->insert($model);
         }
     }
 }
