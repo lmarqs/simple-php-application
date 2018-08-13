@@ -20,12 +20,13 @@ abstract class Dao
         $sth = $pdo->prepare($sql);
         $sth->execute($array);
 
-        return $this->fetch($pdo->lastInsertId());
+        return $pdo->lastInsertId();
     }
 
     public function fetch($id)
     {
         $sql = "SELECT * FROM {$this->table()} WHERE id = :id";
+
         $sth = ConnectionFactory::connection()->prepare($sql);
         $sth->execute(['id' => $id]);
 
@@ -35,20 +36,25 @@ abstract class Dao
     public function update($model)
     {
         $sql = "INSERT INTO {$this->table()} VALUES ({join($this->names()})";
+
         $sth = ConnectionFactory::connection()->prepare($sql);
         $sth->execute($this->values());
-        return $sth->fetchAll();
+
     }
 
     public function delete($model)
     {
         $sql = "DELETE FROM {$this->table()} WHERE id = :id";
+
         $sth = ConnectionFactory::connection()->prepare($sql);
-        $data = $sth->execute(['id' => $model->getId()]);
+        $sth->execute(['id' => $model->getId()]);
     }
+
     public function find()
     {
-        $sth = ConnectionFactory::connection()->prepare("SELECT * FROM {$this->table()}");
+        $sql = "SELECT * FROM {$this->table()}";
+        
+        $sth = ConnectionFactory::connection()->prepare($sql);
         $sth->execute();
 
         return $sth->fetchAll(\PDO::FETCH_ASSOC);
