@@ -3,6 +3,7 @@ namespace lmarqs\Spa\Middleware\Route\Api;
 
 use lmarqs\Spa\Middleware\Handler;
 use lmarqs\Spa\Middleware\Request;
+use lmarqs\Spa\Service\ContactService;
 
 class ContactRoute extends Handler
 {
@@ -31,7 +32,9 @@ class ContactRoute extends Handler
                 return;
             }
 
-            $response->write('api/contact')->send();
+            $service = new ContactService();
+
+            $response->write(json_encode($service->find()))->send();
         });
 
     }
