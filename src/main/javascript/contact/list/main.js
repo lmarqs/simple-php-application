@@ -3,22 +3,37 @@ import $ from "jquery";
 const $content = $("#content");
 
 const $table = $content.find("table");
-
 const $tbody = $table.find("tbody");
 
-$.ajax({
-        method: "GET",
-        url: "/api/contact"
-    })
-    .then((response) => {
-        const json = JSON.parse(response);
-        renderData(json.hits);
-    });
+loadData();
+
+function loadData() {
+    $tbody
+        .empty()
+        .html(`
+            <tr>
+                <th colspan="5">Loading ...</th>
+            </tr>
+            `);
+
+    $.ajax({
+            method: "GET",
+            url: "/api/contact",
+            data: {
+                q: $content.find("nav [name=q]").val()
+            }
+        })
+        .then((response) => {
+            const json = JSON.parse(response);
+            renderData(json.hits);
+        });
+
+}
 
 
 function renderData(hits) {
 
-    $tbody.html("");
+    $tbody.empty();
     hits.forEach((hit) => {
         const {
             _source
@@ -46,6 +61,7 @@ function renderData(hits) {
             text: _source.birthday
         }));
 
+        window.console.log(hit);
         $row.append($("<td>")
             .append($("<a>", {
                 href: `/contact/${_source.id}`,
@@ -53,11 +69,28 @@ function renderData(hits) {
                 text: "Edit"
             }))
             .append($("<a>", {
-                href: `/contact/delete/${_source.id}`,
                 class: "btn btn-danger",
-                text: "Delete"
+                text: "Delete",
+                data: {
+                    id: _source.id
+                },
+                on: {
+                    click(event) {
+                        deleteContact($(event.target).data("id"));
+                    }
+                }
             })));
 
         $tbody.append($row);
     });
+}
+
+function deleteContact(id) {
+    $.ajax({
+            method: "DELETE",
+            url: `/api/contact/${id}`
+        })
+        .then(() => {
+            loadData();
+        });
 }
