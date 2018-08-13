@@ -71,14 +71,13 @@ class Indexer
 
     public static function search($term = '')
     {
-
         $params = [
             "index" => self::ELASTICSEARCH_INDEX,
             "type" => self::ELASTICSEARCH_TYPE,
             "body" => [
                 "query" => [
                     "query_string" => [
-                        "query" => "teste",
+                        "query" => empty($term) ? "*" : $term,
                     ],
                 ],
             ],
