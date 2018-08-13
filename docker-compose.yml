@@ -19,10 +19,11 @@ services:
     volumes:
       - "./docker/composer/logs:/logs"
       - ".:/app"
-      - "/app/vendor"
+      # - "/app/vendor"
     ports:
       - "8080:8080"
     environment:
+      - "CONTROLLER_BUNDLES_SERVER_ADDRESS=http://localhost:3000"
       - "PDO_DNS=mysql:dbname=spa;host=mysql;charset=utf8"
       - "PDO_USERNAME=root"
       - "PDO_PASSWORD="
@@ -36,7 +37,7 @@ services:
     working_dir: /usr/app
     volumes:
       - ".:/usr/app"
-      - "/usr/app/node_modules"
+      # - "/usr/app/node_modules"
     ports:
       - "3000:3000"
 

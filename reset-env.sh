@@ -1,12 +1,11 @@
 docker-compose down --volumes
 docker-compose rm
 
-sudo find -name vendor -exec rm -rf {} \;
-sudo find -name node_modules -exec rm -rf {} \;
-sudo find -name bundles -exec rm -rf {} \;
+sudo find -type d -name vendor -exec rm -rf {} \;
+sudo find -type d -name node_modules -exec rm -rf {} \;
 
-sudo find docker -name logs -exec rm -rf {} \;
-sudo find docker -name data -exec rm -rf {} \;
+sudo find docker -type d -name logs -exec rm -rf {} \;
+sudo find docker -type d -name data -exec rm -rf {} \;
 
 mkdir ./docker/composer/logs
 
