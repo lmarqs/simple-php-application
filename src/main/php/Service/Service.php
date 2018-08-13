@@ -20,7 +20,7 @@ abstract class Service
 
     public function fetch($id)
     {
-        $this->getDao()->fetch($id);
+        return $this->getDao()->fetch($id);
     }
 
     public function update($model)
