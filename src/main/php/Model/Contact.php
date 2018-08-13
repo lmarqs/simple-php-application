@@ -28,7 +28,7 @@ class Contact extends Model
         $this->setName($array['name']);
         $this->setPhone($array['phone']);
         $this->setEmail($array['email']);
-        $this->setEmail($array['birthday']);
+        $this->setBirthday($array['birthday']);
 
         return $this;
     }
