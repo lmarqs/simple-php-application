@@ -18,7 +18,7 @@ abstract class Service
     public function insert($model)
     {
         $this->validate($model);
-        $this->getDao()->insert($model);
+        Indexer::index($this->getDao()->insert($model));
     }
 
     public function fetch($id)
@@ -29,12 +29,12 @@ abstract class Service
     public function update($model)
     {
         $this->validate($model);
-        $this->getDao()->update($model);
+        Indexer::index($this->getDao()->update($model));
     }
 
     public function delete($id)
     {
-        $this->getDao()->delete($id);
+        Indexer::delete($this->getDao()->delete($id));
     }
 
     public function find($term = '')

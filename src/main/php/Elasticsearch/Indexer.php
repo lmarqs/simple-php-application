@@ -6,25 +6,63 @@ use Elasticsearch\ClientBuilder;
 class Indexer
 {
 
+    const INDEX = "spa";
+
     private static $client;
+
+    private static function createIndex()
+    {
+        $params = [
+            "index" => self::INDEX,
+        ];
+
+        self::getClient()->indices()->create($params);
+    }
 
     private static function getClient()
     {
         if (!self::$client) {
-            $client = ClientBuilder::create()
+            self::$client = ClientBuilder::create()
                 ->setHosts([getenv("ELASTICSEARCH_HOST")])
                 ->build();
+            try {
+                self::createIndex();
+            } catch (\Exception $ignored) {
+
+            }
+
         }
         return self::$client;
+    }
+
+    public static function delete($id)
+    {
+
+        $params = [
+            "index" => self::INDEX,
+            "id" => $id,
+        ];
+
+        self::getClient()->delete($params);
+    }
+
+    public static function index($document)
+    {
+
+        $params = [
+            "index" => self::INDEX,
+            "id" => $document["id"],
+            "body" => $document,
+        ];
+
+        self::getClient()->index($params);
     }
 
     public static function search($term)
     {
 
-        $client = self::getClient();
-
         $params = [
-            "index" => self::getIndex(),
+            "index" => self::INDEX,
             "body" => [
                 "query" => [
                     "match" => [
@@ -34,6 +72,6 @@ class Indexer
             ],
         ];
 
-        return $client->search($params)["hits"];
+        return self::getClient()->search($params)["hits"];
     }
 }
