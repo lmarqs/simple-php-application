@@ -10,6 +10,15 @@ services:
       - "./docker/mysql/config/custom.cnf:/etc/mysql/conf.d/custom.cnf"
       - "./docker/mysql/config/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql"
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - mysql
+    ports:
+      - 8090:80
+    environment:
+      - PMA_ARBITRARY=1
+
   composer:
     build:
       context: "."
@@ -19,17 +28,17 @@ services:
     volumes:
       - "./docker/composer/logs:/logs"
       - ".:/app"
-      # - "/app/vendor"
     ports:
       - "8080:8080"
     environment:
+      - "ADMIN_USERNAME=admin"
+      - "ADMIN_PASSWORD=admin"
+      - "AUTHENTICABLE_SECRET=!s3cr3t[%s][%s]"
       - "CONTROLLER_BUNDLES_SERVER_ADDRESS=http://localhost:3000"
+      - "ELASTICSEARCH_HOST=elasticsearch"
       - "PDO_DNS=mysql:dbname=spa;host=mysql;charset=utf8"
       - "PDO_USERNAME=root"
       - "PDO_PASSWORD="
-      - "AUTHENTICABLE_SECRET=!s3cr3t[%s][%s]"
-      - "ADMIN_USERNAME=admin"
-      - "ADMIN_PASSWORD=admin"
 
   node:
     image: node:8.11
@@ -37,7 +46,6 @@ services:
     working_dir: /usr/app
     volumes:
       - ".:/usr/app"
-      # - "/usr/app/node_modules"
     ports:
       - "3000:3000"
 
