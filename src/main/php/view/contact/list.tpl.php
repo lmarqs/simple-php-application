@@ -17,9 +17,6 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td colspan="5">Loading ...</th>
-            </tr>
         </tbody>
     </table>
 </div>
