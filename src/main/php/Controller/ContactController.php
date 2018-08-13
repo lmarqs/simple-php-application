@@ -26,6 +26,7 @@ class ContactController extends Controller
                 self::processModel($id, $request);
                 $response->setHeader('Location', '/contact')->send();
             } catch (ValidationException $ex) {
+                $request->addAttributes($request->parameters());
                 $response->addErrors($ex->getErrors());
                 self::render('contact/form', $request, $response);
             }
