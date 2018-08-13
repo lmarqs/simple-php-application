@@ -13,7 +13,7 @@ abstract class Service
         $this->validate($model);
         $dao = $this->getDao();
         $id = $dao->insert($model);
-        $model = $dao->fetch($model->getId());
+        $model = $dao->fetch($id);
         Indexer::index($model->toArray());
         return $model;
     }
