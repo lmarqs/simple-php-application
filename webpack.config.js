@@ -2,11 +2,14 @@ const webpack = require("webpack");
 const path = require("path");
 
 const entry = {
-    main: "./src/main/javascript/main.js",
-    login: "./src/main/javascript/login/main.js",
-    libs: "./src/main/javascript/libs.js"
+    "main": "./src/main/javascript/main.js",
+    "login/form": "./src/main/javascript/login/main.js",
+    "contact/list": "./src/main/javascript/contact/list/main.js",
+    "libs": "./src/main/javascript/libs.js"
 };
-const plugins = [new webpack.NoEmitOnErrorsPlugin()];
+const plugins = [
+    new webpack.NoEmitOnErrorsPlugin()
+];
 
 if (process.env.NODE_ENV === "development") {
     entry["__webpack_hmr"] = "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000";
@@ -25,8 +28,15 @@ module.exports = {
                 use: [
                     "babel-loader",
                     "eslint-loader"
-                ],
-                exclude: /node_modules/
+                ]
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    "style-loader",
+                    "css-loader",
+                    "resolve-url-loader"
+                ]
             },
             {
                 test: /\.scss$/,
@@ -35,8 +45,7 @@ module.exports = {
                     "css-loader",
                     "resolve-url-loader",
                     "sass-loader?sourceMap"
-                ],
-                exclude: /node_modules/
+                ]
             },
             {
                 test: /\.(png|jpg|gif|svg)$/,
