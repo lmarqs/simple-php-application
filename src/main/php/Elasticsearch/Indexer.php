@@ -50,6 +50,7 @@ class Indexer
 
         $params = [
             "index" => self::ELASTICSEARCH_INDEX,
+            "type" => self::ELASTICSEARCH_TYPE,
             "id" => $id,
         ];
 
