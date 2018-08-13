@@ -1,6 +1,8 @@
 <?php
 namespace lmarqs\Spa\Service;
 
+use lmarqs\Spa\Elasticsearch\Indexer;
+
 abstract class Service
 {
     private $pdo;
@@ -35,23 +37,9 @@ abstract class Service
         $this->getDao()->delete($id);
     }
 
-    public function find($term)
+    public function find($term = '')
     {
-        $params = [
-            "body" => [
-                "query" => [
-                    "match" => [
-                        "testField" => $term,
-                    ],
-                ],
-            ],
-        ];
-
-        $client = ClientBuilder::create();
-        $client->setHosts(["elasticsearch"])
-            ->build();
-
-        return $client->search($params);
+        return Indexer::search($term);
     }
 
 }

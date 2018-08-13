@@ -9,12 +9,12 @@ class Admin extends Model implements Authenticable
 
     public function getUsername()
     {
-        return getenv('ADMIN_USERNAME');
+        return getenv("ADMIN_USERNAME");
     }
 
     public function getPassword()
     {
-        return $this->encriptPassword(getenv('ADMIN_PASSWORD'));
+        return $this->encriptPassword(getenv("ADMIN_PASSWORD"));
     }
 
     public function comparePassword($password)
@@ -24,6 +24,16 @@ class Admin extends Model implements Authenticable
 
     private function encriptPassword($password)
     {
-        return hash('sha256', sprintf(getenv('AUTHENTICABLE_SECRET'), getenv('ADMIN_USERNAME'), $password));
+        return hash("sha256", sprintf(getenv("AUTHENTICABLE_SECRET"), getenv("ADMIN_USERNAME"), $password));
+    }
+
+    public function toArray() {
+        return [
+            "username" => $this->getUsername(),
+            "password" => $this->getPassword()
+        ];
+    }
+    public function fromArray($array) {
+        return Admin::getInstance();
     }
 }
