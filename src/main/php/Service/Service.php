@@ -5,20 +5,15 @@ use lmarqs\Spa\Elasticsearch\Indexer;
 
 abstract class Service
 {
-    private $pdo;
-    private $fields = array();
-
-    public function __construct()
-    {
-        $this->pdo = new \PDO(getenv('PDO_DNS'), getenv('PDO_USERNAME'), getenv('PDO_PASSWORD'));
-    }
 
     abstract public function validate($model);
 
     public function insert($model)
     {
         $this->validate($model);
-        $model = $this->getDao()->insert($model);
+        $dao = $this->getDao();
+        $id = $dao->insert($model);
+        $model = $dao->fetch($model->getId());
         Indexer::index($model->toArray());
         return $model;
     }
@@ -31,12 +26,19 @@ abstract class Service
     public function update($model)
     {
         $this->validate($model);
-        Indexer::index($this->getDao()->update($model));
+        $dao = $this->getDao();
+
+        $dao->update($model);
+        $model = $dao->fetch($model->getId());
+
+        Indexer::index($model->toArray());
+        return $model;
     }
 
     public function delete($id)
     {
-        Indexer::delete($this->getDao()->delete($id));
+        $this->getDao()->delete($id)
+        Indexer::delete($id);
     }
 
     public function find($term = '')
