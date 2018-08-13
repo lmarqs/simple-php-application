@@ -32,7 +32,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Birthday</label>
-                        <input bame="birthday" type="date" class="form-control <?=isset($errs['birthday']) ? 'is-invalid' : ''?>">
+                        <input name="birthday" type="date" class="form-control <?=isset($errs['birthday']) ? 'is-invalid' : ''?>">
                         <div class="invalid-feedback"><?=$errs['birthday']?></div>
                     </div>
                 </div>
