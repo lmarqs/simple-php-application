@@ -3,7 +3,7 @@ namespace lmarqs\Spa\Model;
 
 use lmarqs\Spa\Core\SingletonTrait;
 
-class Admin implements Authenticable
+class Admin extends Model implements Authenticable
 {
     use SingletonTrait;
 

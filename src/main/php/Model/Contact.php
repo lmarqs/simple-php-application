@@ -2,7 +2,7 @@
 
 namespace lmarqs\Spa\Model;
 
-class Contact
+class Contact extends Model
 {
 
     private $id;
@@ -10,6 +10,28 @@ class Contact
     private $phone;
     private $email;
     private $birthday;
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'phone' => $this->getPhone(),
+            'email' => $this->getEmail(),
+            'birthday' => $this->getBirthday(),
+        ];
+    }
+
+    public function fromArray($array)
+    {
+        $this->setId($array['id']);
+        $this->setName($array['name']);
+        $this->setPhone($array['phone']);
+        $this->setEmail($array['email']);
+        $this->setEmail($array['birthday']);
+
+        return $this;
+    }
 
     public function getId()
     {
@@ -49,5 +71,15 @@ class Contact
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    public function getBirthday()
+    {
+        return $this->birthday;
+    }
+
+    public function setBirthday($birthday)
+    {
+        $this->birthday = $birthday;
     }
 }
