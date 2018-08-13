@@ -6,14 +6,24 @@ use Elasticsearch\ClientBuilder;
 class Indexer
 {
 
-    const INDEX = "spa";
+    const ELASTICSEARCH_INDEX = "spa";
+    const ELASTICSEARCH_TYPE = "doc";
 
     private static $client;
 
     private static function createIndex()
     {
         $params = [
-            "index" => self::INDEX,
+            "index" => self::ELASTICSEARCH_INDEX,
+            "body" => [
+                "mappings" => [
+                    self::ELASTICSEARCH_TYPE => [
+                        "_all" => [
+                            "enabled" => true,
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         self::getClient()->indices()->create($params);
@@ -39,7 +49,7 @@ class Indexer
     {
 
         $params = [
-            "index" => self::INDEX,
+            "index" => self::ELASTICSEARCH_INDEX,
             "id" => $id,
         ];
 
@@ -50,7 +60,8 @@ class Indexer
     {
 
         $params = [
-            "index" => self::INDEX,
+            "index" => self::ELASTICSEARCH_INDEX,
+            "type" => self::ELASTICSEARCH_TYPE,
             "id" => $document["id"],
             "body" => $document,
         ];
@@ -58,15 +69,16 @@ class Indexer
         self::getClient()->index($params);
     }
 
-    public static function search($term)
+    public static function search($term = '')
     {
 
         $params = [
-            "index" => self::INDEX,
+            "index" => self::ELASTICSEARCH_INDEX,
+            "type" => self::ELASTICSEARCH_TYPE,
             "body" => [
                 "query" => [
-                    "match" => [
-                        "_all" => $term,
+                    "query_string" => [
+                        "query" => "teste",
                     ],
                 ],
             ],

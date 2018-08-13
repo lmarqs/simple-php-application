@@ -13,6 +13,7 @@
                 <th scope="col">Phone</th>
                 <th scope="col">E-mail</th>
                 <th scope="col">Birthday</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>

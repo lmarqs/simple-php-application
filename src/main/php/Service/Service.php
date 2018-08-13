@@ -18,7 +18,9 @@ abstract class Service
     public function insert($model)
     {
         $this->validate($model);
-        Indexer::index($this->getDao()->insert($model));
+        $model = $this->getDao()->insert($model);
+        Indexer::index($model->toArray());
+        return $model;
     }
 
     public function fetch($id)

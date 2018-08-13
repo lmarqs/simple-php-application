@@ -12,26 +12,52 @@ $.ajax({
     })
     .then((response) => {
         const json = JSON.parse(response);
-        renderData(json.data);
+        renderData(json.hits);
     });
 
 
-function renderData(data) {
+function renderData(hits) {
 
     $tbody.html("");
-    data.forEach((row) => {
+    hits.forEach((hit) => {
+        const {
+            _source
+        } = hit;
+
         const $row = $("<tr>");
 
         $row.append($("<td>", {
-            text: row.id,
-            class: "text-center"
+            text: _source.id
         }));
+
+        $row.append($("<td>", {
+            text: _source.name
+        }));
+
+        $row.append($("<td>", {
+            text: _source.phone
+        }));
+
+        $row.append($("<td>", {
+            text: _source.email
+        }));
+
+        $row.append($("<td>", {
+            text: _source.birthday
+        }));
+
+        $row.append($("<td>")
+            .append($("<a>", {
+                href: `/contact/${_source.id}`,
+                class: "btn btn-primary",
+                text: "Edit"
+            }))
+            .append($("<a>", {
+                href: `/contact/delete/${_source.id}`,
+                class: "btn btn-danger",
+                text: "Delete"
+            })));
 
         $tbody.append($row);
     });
 }
-// private $id;
-// private $name;
-// private $phone;
-// private $email;
-// private $birthday;

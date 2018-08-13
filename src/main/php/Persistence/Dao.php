@@ -13,20 +13,23 @@ abstract class Dao
     {
         $array = $model->toArray();
 
-        $sql = "INSERT INTO {$this->table()} ({array_keys($array)}) VALUES ($this->placeholders($array))";
-        $sth = ConnectionFactory::connection()->prepare($sql);
+        $sql = sprintf('INSERT INTO %s (%s) VALUES (%s);', $this->table(), join(array_keys($array), ', '), join($this->placeholders($array), ', '));
+
+        $pdo = ConnectionFactory::connection();
+
+        $sth = $pdo->prepare($sql);
         $sth->execute($array);
 
-        return $sth->fetchAll();
+        return $this->fetch($pdo->lastInsertId());
     }
 
     public function fetch($id)
     {
         $sql = "SELECT * FROM {$this->table()} WHERE id = :id";
         $sth = ConnectionFactory::connection()->prepare($sql);
-        $sth->execute(['id' => $id()]);
+        $sth->execute(['id' => $id]);
 
-        return $this->model->fromArray($sth->fetchAll(\PDO::FETCH_ASSOC)[0]);
+        return $this->model()->fromArray($sth->fetchAll(\PDO::FETCH_ASSOC)[0]);
     }
 
     public function update($model)
@@ -58,7 +61,7 @@ abstract class Dao
 
         foreach ($array as $key => $value) {
             if (!in_array($key, $ignore)) {
-                $placeholders[] = "$key";
+                $placeholders[] = ":$key";
             }
         }
 
