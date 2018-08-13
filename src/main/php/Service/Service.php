@@ -37,7 +37,7 @@ abstract class Service
 
     public function delete($id)
     {
-        $this->getDao()->delete($id)
+        $this->getDao()->delete($id);
         Indexer::delete($id);
     }
 

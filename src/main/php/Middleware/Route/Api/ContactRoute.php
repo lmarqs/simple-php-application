@@ -32,8 +32,9 @@ class ContactRoute extends Handler
                 $next();
                 return;
             }
-            print_r($matches);
-            ContactService::delete($matches[0]);
+            $service = new ContactService();
+            $service->delete($matches[0]);
+
             $response->send();
 
         });

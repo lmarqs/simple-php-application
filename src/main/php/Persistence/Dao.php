@@ -42,18 +42,18 @@ abstract class Dao
 
     }
 
-    public function delete($model)
+    public function delete($id)
     {
-        $sql = "DELETE FROM {$this->table()} WHERE id = :id";
+        $sql = sprintf('DELETE FROM %s WHERE id = :id', $this->table());
 
         $sth = ConnectionFactory::connection()->prepare($sql);
-        $sth->execute(['id' => $model->getId()]);
+        $sth->execute(['id' => $id]);
     }
 
     public function find()
     {
         $sql = "SELECT * FROM {$this->table()}";
-        
+
         $sth = ConnectionFactory::connection()->prepare($sql);
         $sth->execute();
 
