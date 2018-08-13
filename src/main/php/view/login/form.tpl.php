@@ -24,4 +24,4 @@
         </div>
     </div>
 </div>
-<script src="<?=$BUNDLES_SERVER_ADDRESS?>/public/bundle/login.js"></script>
+<script src="<?=$BUNDLES_SERVER_ADDRESS?>/public/bundle/login/form.js"></script>
