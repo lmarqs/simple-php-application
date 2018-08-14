@@ -9,7 +9,7 @@
         <form role="form" class="form-horizontal" method="post" autocomplete="off">
             <div class="form-group">
                 <label>Name</label>
-                <input name="name" type="text" required value="<?=htmlspecialchars($attrs["name"])?>" class="form-control <?=isset($errs["name"]) ? "is-invalid" : ""?>">
+                <input name="name" autofocus type="text" required value="<?=htmlspecialchars($attrs["name"])?>" class="form-control <?=isset($errs["name"]) ? "is-invalid" : ""?>">
                 <div class="invalid-feedback"><?=htmlspecialchars($errs["name"])?></div>
             </div>
             <div class="row">
