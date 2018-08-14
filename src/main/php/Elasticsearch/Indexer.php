@@ -31,7 +31,6 @@ class Indexer
 
     private static function getClient()
     {
-        usleep(500000);
         if (!self::$client) {
             self::$client = ClientBuilder::create()
                 ->setHosts([getenv('ELASTICSEARCH_HOST')])
@@ -56,6 +55,7 @@ class Indexer
         ];
 
         self::getClient()->delete($params);
+        sleep(1); // Took 1 sec to index
     }
 
     public static function index($document)
@@ -69,6 +69,7 @@ class Indexer
         ];
 
         self::getClient()->index($params);
+        sleep(1); // Took 1 sec to index
     }
 
     public static function search($term = '')
