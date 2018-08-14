@@ -16,7 +16,7 @@ class Request
     public function addErrors($errors)
     {
         foreach ($errors as $key => $value) {
-            $this->$errors[$key] = $value;
+            $this->errors[$key] = $value;
         }
     }
 
@@ -32,9 +32,8 @@ class Request
 
     public function addAttributes($attributes)
     {
-        print_r($attributes);
         foreach ($attributes as $key => $value) {
-            $this->$attributes[$key] = $value;
+            $this->attributes[$key] = $value;
         }
     }
 
