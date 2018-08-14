@@ -79,7 +79,7 @@ class Indexer
             "body" => [
                 "query" => [
                     "query_string" => [
-                        "query" => empty($term) ? "*" : $term,
+                        "query" => "*$term*",
                     ],
                 ],
             ],
