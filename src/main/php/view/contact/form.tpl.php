@@ -2,7 +2,7 @@
 <br/>
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title"><?=$attrs["id"] == null ? "Creating" : "Updating"?> a contact</h5>
+        <h5 class="card-title"><?=!$attrs["id"] ? "Creating" : "Updating"?> a contact</h5>
         <a href="/contact" class="btn btn-primary">Contacts</a>
         <br/>
         <br/>
@@ -16,14 +16,14 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Phone</label>
-                        <input name="phone" type="tel" class="form-control <?=isset($errs["phone"]) ? "is-invalid" : ""?>">
+                        <input name="phone" type="tel" value="<?=htmlspecialchars($attrs["phone"])?>" class="form-control <?=isset($errs["phone"]) ? "is-invalid" : ""?>">
                         <div class="invalid-feedback"><?=htmlspecialchars($errs["phone"])?></div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Email</label>
-                        <input name="email" type="email" class="form-control <?=isset($errs["email"]) ? "is-invalid" : ""?>">
+                        <input name="email" type="email" value="<?=htmlspecialchars($attrs["email"])?>" class="form-control <?=isset($errs["email"]) ? "is-invalid" : ""?>">
                         <div class="invalid-feedback"><?=htmlspecialchars($errs["email"])?></div>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Birthday</label>
-                        <input name="birthday" type="date" class="form-control <?=isset($errs["birthday"]) ? "is-invalid" : ""?>">
+                        <input name="birthday" type="date" required value="<?=htmlspecialchars($attrs["birthday"])?>" class="form-control <?=isset($errs["birthday"]) ? "is-invalid" : ""?>">
                         <div class="invalid-feedback"><?=htmlspecialchars($errs["birthday"])?></div>
                     </div>
                 </div>

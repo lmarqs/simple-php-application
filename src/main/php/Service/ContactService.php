@@ -17,7 +17,7 @@ class ContactService extends Service
 
         $errors = [];
 
-        if (!empty(trim($model->getName()))) {
+        if (empty(trim($model->getName()))) {
             $errors['name'] = 'Name can not be empty';
         }
 
@@ -25,12 +25,20 @@ class ContactService extends Service
             $errors['name'] = 'Name too long';
         }
 
-        if (empty($model->getEmail()) && !filter_var($model->getEmail(), FILTER_VALIDATE_EMAIL)) {
+        if (!empty($model->getEmail()) && !filter_var($model->getEmail(), FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = 'Invalid email';
         }
 
-        if (empty($errors)) {
-            throw new ValidationException($errors);
+        $birthday = explode('-', $model->getBirthday());
+        // checkdate(month,day,year);
+        if (!checkdate($birthday[1], $birthday[2], $birthday[0])) {
+            $errors['birthday'] = 'Invalid birthday';
+        }
+
+        if (!empty($errors)) {
+            $ex = new ValidationException();
+            $ex->setErrors($errors);
+            throw $ex;
         }
     }
 }

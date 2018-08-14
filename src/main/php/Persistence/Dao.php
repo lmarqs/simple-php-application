@@ -13,12 +13,24 @@ abstract class Dao
     {
         $array = $model->toArray();
 
-        $sql = sprintf('INSERT INTO %s (%s) VALUES (%s);', $this->table(), join(array_keys($array), ', '), join($this->placeholders($array), ', '));
+        $columns = [];
+        $values = [];
+        $parameters = [];
+
+        foreach($array as $key => $value) {
+            if ($key != 'id') {
+                $columns[] = "$key";
+                $values[] = ":$key";
+                $parameters[":$key"] = $value;
+            }
+        }
+
+        $sql = sprintf('INSERT INTO %s (%s) VALUES (%s);', $this->table(), join($columns, ', '), join($values, ', '));
 
         $pdo = ConnectionFactory::connection();
 
         $sth = $pdo->prepare($sql);
-        $sth->execute($array);
+        $sth->execute($parameters);
 
         return $pdo->lastInsertId();
     }
@@ -35,10 +47,20 @@ abstract class Dao
 
     public function update($model)
     {
-        $sql = "INSERT INTO {$this->table()} VALUES ({join($this->names()})";
+        $array = $model->toArray();
+
+        $columns = [];
+        foreach($array as $key => $value) {
+            if ($key != 'id') {
+                $columns[] .= "$key = :$key";
+            }
+        }
+
+        $sql = sprintf('UPDATE %s SET %s WHERE id = :id;', $this->table(), join($columns, ', '));
 
         $sth = ConnectionFactory::connection()->prepare($sql);
-        $sth->execute($this->values());
+
+        $sth->execute($array);
 
     }
 
@@ -58,19 +80,5 @@ abstract class Dao
         $sth->execute();
 
         return $sth->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    protected function placeholders($array, $ignore = [])
-    {
-        $keys = array_keys($array);
-        $placeholders = [];
-
-        foreach ($array as $key => $value) {
-            if (!in_array($key, $ignore)) {
-                $placeholders[] = ":$key";
-            }
-        }
-
-        return $placeholders;
     }
 }

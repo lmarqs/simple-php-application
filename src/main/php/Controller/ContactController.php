@@ -4,6 +4,7 @@ namespace lmarqs\Spa\Controller;
 use lmarqs\Spa\Middleware\Request;
 use lmarqs\Spa\Model\Contact;
 use lmarqs\Spa\Service\ContactService;
+use lmarqs\Spa\Service\ValidationException;
 
 class ContactController extends Controller
 {
@@ -30,7 +31,7 @@ class ContactController extends Controller
                 $response->setHeader('Location', '/contact')->send();
             } catch (ValidationException $ex) {
                 $request->addAttributes($request->parameters());
-                $response->addErrors($ex->getErrors());
+                $request->addErrors($ex->getErrors());
                 self::render('contact/form', $request, $response);
             }
 
@@ -42,14 +43,13 @@ class ContactController extends Controller
     private static function processModel($id, $request)
     {
 
-        $parameters = $request->parameters();
-
         $model = new Contact();
-        $model->fromArray($parameters);
-
+        $model->fromArray($request->parameters());
+        
         $service = new ContactService();
-
+        
         if ($id) {
+            $model->setId($id);
             $service->update($model);
         } else {
             $service->insert($model);

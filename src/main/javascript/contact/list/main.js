@@ -11,8 +11,8 @@ function loadData() {
     $tbody
         .empty()
         .html(`
-            <tr>
-                <th colspan="5">Loading ...</th>
+            <tr class="text-center">
+                <th colspan="6">Loading ...</th>
             </tr>
             `);
 
@@ -26,6 +26,8 @@ function loadData() {
         .then((response) => {
             const json = JSON.parse(response);
             renderData(json.hits);
+        }).catch(() => {
+            renderData([]);
         });
 
 }
@@ -34,10 +36,25 @@ function loadData() {
 function renderData(hits) {
 
     $tbody.empty();
+
+    if (!hits.length) {
+        $tbody
+            .empty()
+            .html(`
+                <tr class="text-center">
+                    <th colspan="6">No data</th>
+                </tr>
+                `);
+    }
+
     hits.forEach((hit) => {
         const {
             _source
         } = hit;
+
+        if (!_source.id) {
+            return;
+        }
 
         const $row = $("<tr>");
 
@@ -61,7 +78,6 @@ function renderData(hits) {
             text: _source.birthday
         }));
 
-        window.console.log(hit);
         $row.append($("<td>")
             .append($("<a>", {
                 href: `/contact/${_source.id}`,
@@ -69,7 +85,7 @@ function renderData(hits) {
                 text: "Edit"
             }))
             .append($("<a>", {
-                class: "btn btn-danger",
+                class: "btn btn-secondary",
                 text: "Delete",
                 data: {
                     id: _source.id
