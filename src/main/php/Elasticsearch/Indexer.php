@@ -6,20 +6,20 @@ use Elasticsearch\ClientBuilder;
 class Indexer
 {
 
-    const ELASTICSEARCH_INDEX = "spa";
-    const ELASTICSEARCH_TYPE = "doc";
+    const ELASTICSEARCH_INDEX = 'spa';
+    const ELASTICSEARCH_TYPE = 'doc';
 
     private static $client;
 
     private static function createIndex()
     {
         $params = [
-            "index" => self::ELASTICSEARCH_INDEX,
-            "body" => [
-                "mappings" => [
+            'index' => self::ELASTICSEARCH_INDEX,
+            'body' => [
+                'mappings' => [
                     self::ELASTICSEARCH_TYPE => [
-                        "_all" => [
-                            "enabled" => true,
+                        '_all' => [
+                            'enabled' => true,
                         ],
                     ],
                 ],
@@ -34,7 +34,7 @@ class Indexer
         usleep(500000);
         if (!self::$client) {
             self::$client = ClientBuilder::create()
-                ->setHosts([getenv("ELASTICSEARCH_HOST")])
+                ->setHosts([getenv('ELASTICSEARCH_HOST')])
                 ->build();
             try {
                 self::createIndex();
@@ -50,9 +50,9 @@ class Indexer
     {
 
         $params = [
-            "index" => self::ELASTICSEARCH_INDEX,
-            "type" => self::ELASTICSEARCH_TYPE,
-            "id" => $id,
+            'index' => self::ELASTICSEARCH_INDEX,
+            'type' => self::ELASTICSEARCH_TYPE,
+            'id' => $id,
         ];
 
         self::getClient()->delete($params);
@@ -62,10 +62,10 @@ class Indexer
     {
 
         $params = [
-            "index" => self::ELASTICSEARCH_INDEX,
-            "type" => self::ELASTICSEARCH_TYPE,
-            "id" => $document["id"],
-            "body" => $document,
+            'index' => self::ELASTICSEARCH_INDEX,
+            'type' => self::ELASTICSEARCH_TYPE,
+            'id' => $document['id'],
+            'body' => $document,
         ];
 
         self::getClient()->index($params);
@@ -74,17 +74,17 @@ class Indexer
     public static function search($term = '')
     {
         $params = [
-            "index" => self::ELASTICSEARCH_INDEX,
-            "type" => self::ELASTICSEARCH_TYPE,
-            "body" => [
-                "query" => [
-                    "query_string" => [
-                        "query" => "*$term*",
+            'index' => self::ELASTICSEARCH_INDEX,
+            'type' => self::ELASTICSEARCH_TYPE,
+            'body' => [
+                'query' => [
+                    'query_string' => [
+                        'query' => "*$term*",
                     ],
                 ],
             ],
         ];
 
-        return self::getClient()->search($params)["hits"];
+        return self::getClient()->search($params)['hits'];
     }
 }
