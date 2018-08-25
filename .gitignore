@@ -1,6 +1,14 @@
+# IDE
+.vscode
+
+# Docker
 **/data/
 **/logs/
+
+# Node
 **/node_modules/
 **/package-lock.json
+
+# PHP Composer
 **/vendor/
 **/composer.lock
