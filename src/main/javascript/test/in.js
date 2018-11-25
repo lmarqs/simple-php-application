@@ -1,8 +1,7 @@
-/* eslint-disable no-console, require-jsdoc */
+/* eslint-disable max-classes-per-file, no-console, require-jsdoc */
 
 // import { View } from "backbone";
 // import underscore from "underscore";
-
 
 //  for (let prop in View) {
 //      console.log(prop);
@@ -13,14 +12,19 @@
 //      console.log(prop);
 //  }
 
-@BookCollector()
-export default class {
+const symbol = Symbol("on");
+// @BookCollector()
+// export default class {}
 
-}
-
-function BookCollector (options, test) {
+function BookCollector (options = {}) {
     return (target) => {
-        target.finisher = (Class) => class extends Class {
+        console.log("symbol", target.elements[2].descriptor[symbol]);
+        // console.log(target.elements.find(({ key }) => key === "log").descriptor[symbol]);
+        target.finisher = factory;
+    };
+
+    function factory (Class) {
+        return class Finisher extends Class {
 
             constructor (...args) {
                 super(...args);
@@ -32,21 +36,41 @@ function BookCollector (options, test) {
             }
 
             log (...args) {
-                console.log(this, ...args);
+                console.log("Finisher.log", this, ...args);
+                if (super.log) {
+                    super.log(...args);
+                }
             }
 
         };
+    }
+}
+
+function On (event) {
+    return (target) => {
+        target.oioioi = 123456;
+        target.descriptor[symbol] = {
+            ...target.descriptor[symbol],
+            [event]: `${event} 1111111111111111111111111`,
+        };
+        console.log(target);
     };
 }
 
+// Object.defineProperty(On, "symbol", {
+//     configurable: true,
+//     enumerable: true,
+//     value: symbol,
+//     writable: true,
+// });
+
+
 function enumerable (target) {
-    console.log(target);
     const fn = target.descriptor.value;
     target.descriptor.value = function value (wrestler) {
         fn.call(this, `${wrestler} is a wrestler`);
     };
 }
-
 
 class Person {
 
@@ -62,6 +86,10 @@ class Person {
         this.firstName = first;
         this.lastName = last;
         return this;
+    }
+
+    log (...args) {
+        console.log("Person.log", this, ...args);
     }
 
 }
@@ -88,6 +116,14 @@ class Lucas extends Person {
         console.log(this.firstName, "is rendering");
     }
 
+    @On("event selector")
+    @On("event selector2")
+    @On("event selector3")
+    log (...args) {
+        console.log("Lucas.log", this, ...args);
+        //   super.log(...args);
+    }
+
 }
 
 class Marques extends Lucas {}
@@ -106,21 +142,19 @@ console.log(Lucas.__super__); // eslint-disable-line no-underscore-dangle, no-co
 const lucas = new Lucas();
 console.log("instanceof", lucas instanceof Lucas, lucas instanceof Person);
 lucas.log("lucas log");
-console.log(lucas);
-lucas.collect();
-lucas.study();
-lucas.render();
+// console.log(lucas);
+// lucas.collect();
+// lucas.study();
+// lucas.render();
 
+// for (const key in lucas) {
+//     if (Object.prototype.hasOwnProperty.call(lucas, key)) {
+//         console.log(key, lucas[key]);
+//     }
+// }
 
-for (const key in lucas) {
-    if (Object.prototype.hasOwnProperty.call(lucas, key)) {
-        console.log(key, lucas[key]);
-    }
-}
+// const marques = new Marques();
 
-
-const marques = new Marques();
-
-marques.log("marques log");
-marques.study();
-marques.render();
+// marques.log("marques log");
+// marques.study();
+// marques.render();
