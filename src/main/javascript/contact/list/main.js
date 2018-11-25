@@ -7,7 +7,11 @@ const $tbody = $table.find("tbody");
 
 loadData();
 
-function loadData() {
+/**
+ * Load data from server and renders to screen
+ * @returns {void}
+ */
+function loadData () {
     $tbody
         .empty()
         .html(`
@@ -16,41 +20,55 @@ function loadData() {
             </tr>
             `);
 
-    $.ajax({
-            method: "GET",
-            url: "/api/contact",
-            data: {
-                q: $content.find("nav [name=q]").val()
-            }
-        })
+    const jqXHR = $.ajax({
+        data: {
+            q: $content.find("nav [name=q]").val(), // eslint-disable-line id-length, max-len
+        },
+        method: "GET",
+        url: "/api/contact",
+    });
+
+    jqXHR
         .then((response) => {
             const json = JSON.parse(response);
             renderData(json.hits);
-        }).catch(() => {
+        })
+        .catch(() => {
             renderData([]);
         });
-
 }
 
+/**
+ * Delete a contact
+ * @param {Number|string} id id of contact to be deleted
+ * @returns {void}
+ */
+function deleteContact (id) {
+    $.ajax({
+        method: "DELETE",
+        url: `/api/contact/${id}`,
+    })
+        .then(() => {
+            loadData();
+        });
+}
 
-function renderData(hits) {
-
-    $tbody.empty();
-
-    if (!hits.length) {
-        $tbody
-            .empty()
-            .html(`
-                <tr class="text-center">
-                    <th colspan="6">No data</th>
-                </tr>
-                `);
-    }
+/**
+ * Renders hits to screen
+ * @param {Array} hits records to be rendered
+ * @returns {void}
+ */
+function renderData (hits) {
+    $tbody
+        .empty()
+        .html(`
+            <tr class="text-center">
+                <th colspan="6">No data</th>
+            </tr>
+        `);
 
     hits.forEach((hit) => {
-        const {
-            _source
-        } = hit;
+        const { _source } = hit;
 
         if (!_source.id) {
             return;
@@ -58,55 +76,29 @@ function renderData(hits) {
 
         const $row = $("<tr>");
 
-        $row.append($("<td>", {
-            text: _source.id
-        }));
-
-        $row.append($("<td>", {
-            text: _source.name
-        }));
-
-        $row.append($("<td>", {
-            text: _source.phone
-        }));
-
-        $row.append($("<td>", {
-            text: _source.email
-        }));
-
-        $row.append($("<td>", {
-            text: _source.birthday
-        }));
+        ["id", "name", "phone", "email", "birthday"].forEach((prop) => {
+            $row.append($("<td>", { text: _source[prop] }));
+        });
 
         $row.append($("<td>")
             .append($("<a>", {
-                href: `/contact/${_source.id}`,
                 class: "btn btn-primary",
-                text: "Edit"
+                href: `/contact/${_source.id}`,
+                text: "Edit",
             }))
             .append($("<a>", {
                 class: "btn btn-secondary",
-                text: "Delete",
                 data: {
-                    id: _source.id
+                    id: _source.id,
                 },
                 on: {
-                    click(event) {
+                    click (event) {
                         deleteContact($(event.target).data("id"));
-                    }
-                }
+                    },
+                },
+                text: "Delete",
             })));
 
         $tbody.append($row);
     });
-}
-
-function deleteContact(id) {
-    $.ajax({
-            method: "DELETE",
-            url: `/api/contact/${id}`
-        })
-        .then(() => {
-            loadData();
-        });
 }

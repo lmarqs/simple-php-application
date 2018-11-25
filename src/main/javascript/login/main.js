@@ -1,6 +1,6 @@
 import "./main.scss";
-import cardImgTop from "./card-img-top.jpg";
 import $ from "jquery";
+import cardImgTop from "./card-img-top.jpg";
 
 const $content = $("#content");
 
