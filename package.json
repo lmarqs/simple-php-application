@@ -21,7 +21,7 @@
     "eslint": "^5.9.0",
     "eslint-loader": "^2.1.1",
     "file-loader": "^2.0.0",
-    "node-sass": "^4.10.0",
+    "node-sass": "^5.0.0",
     "resolve-url-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
